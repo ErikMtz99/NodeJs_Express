@@ -34,6 +34,13 @@ app.get('/api/persons', (request, response) => {
     //response.send('Hello World!')
 })
 
+app.get('/api/info', (request, response) => {
+    const total = persons.length
+    let currentDate = new Date()
+    response.write(`<p> Phonebook has info for ${total} people </p>` + `<p></p>` + `<p> ${currentDate} </p>`)
+    response.end()
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
