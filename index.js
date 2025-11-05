@@ -38,7 +38,6 @@ app.get('/api/info', (request, response) => {
 
 app.get('/api/persons', (request, response) => {
     response.json(persons)
-    //response.send('Hello World!')
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -46,7 +45,13 @@ app.get('/api/persons/:id', (request, response) => {
     const person = persons.find(p => p.id === id)
     console.log(person)
     response.json(person)
-    //response.send('Hello World!')
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    let remainPeople = persons.filter(p => p.id !== id)
+    console.log(remainPeople)
+    response.status(204).end()
 })
 
 app.listen(port, () => {
