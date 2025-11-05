@@ -29,16 +29,24 @@ app.get('/', (request, response) => {
   response.send('Hello World!')
 })
 
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
-    //response.send('Hello World!')
-})
-
 app.get('/api/info', (request, response) => {
     const total = persons.length
     let currentDate = new Date()
     response.write(`<p> Phonebook has info for ${total} people </p>` + `<p></p>` + `<p> ${currentDate} </p>`)
     response.end()
+})
+
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
+    //response.send('Hello World!')
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(p => p.id === id)
+    console.log(person)
+    response.json(person)
+    //response.send('Hello World!')
 })
 
 app.listen(port, () => {
