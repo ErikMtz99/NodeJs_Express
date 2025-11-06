@@ -2,7 +2,13 @@ const express = require('express')
 const app = express()
 const port = 3001
 
+const morgan = require('morgan')
+const logger = morgan('tiny')
+
 app.use(express.json())
+
+app.use(morgan('tiny'))
+
 
 let persons = [
     { 
@@ -83,6 +89,12 @@ app.post('/api/persons', (request, response) => {
 
 
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
