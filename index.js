@@ -4,11 +4,13 @@ const port = 3001
 
 const morgan = require('morgan')
 const logger = morgan('tiny')
+const cors = require('cors')
 
 app.use(express.json())
 
 app.use(morgan('tiny'))
 
+app.use(cors())
 
 let persons = [
     { 
