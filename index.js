@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require('express') //Web Framework used to create APIs (get,post,put,delete,etc)
 const app = express()
 const PORT = process.env.PORT || 3001
 
@@ -6,11 +6,13 @@ const morgan = require('morgan')
 const logger = morgan('tiny')
 const cors = require('cors')
 
-app.use(express.json())
+app.use(express.json()) //express middleware to enable express to understand JSON data in requests: https://www.geeksforgeeks.org/web-tech/express-js-express-json-function/
 
-app.use(morgan('tiny'))
+app.use(express.static('dist')) //Serving static files in Express: https://expressjs.com/en/starter/static-files.html
 
-app.use(cors())
+app.use(morgan('tiny')) // https://expressjs.com/en/resources/middleware/morgan.html
+
+app.use(cors()) //CORS node.js package middleware to enable CORS: https://github.com/expressjs/cors
 
 let persons = [
     { 
