@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3001
+const PORT = process.env.PORT || 3001
 
 const morgan = require('morgan')
 const logger = morgan('tiny')
@@ -99,6 +99,6 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
