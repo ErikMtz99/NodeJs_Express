@@ -1,3 +1,6 @@
+require('dotenv').config() //TO use environmental variables in .env file
+
+const Person = require('./models/person')
 const express = require('express') //Web Framework used to create APIs (get,post,put,delete,etc)
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -38,25 +41,35 @@ let persons = [
 ]
 
 app.get('/', (request, response) => {
-  response.send('Hello World!')
+  response.send('Hello Phonebook!')
 })
 
+// API connected with MongoDB
 app.get('/api/info', (request, response) => {
-    const total = persons.length
-    let currentDate = new Date()
-    response.write(`<p> Phonebook has info for ${total} people </p>` + `<p></p>` + `<p> ${currentDate} </p>`)
-    response.end()
+    Person.countDocuments({}).then(count => {
+        const total = count
+        let currentDate = new Date()
+        response.write(`<p> Phonebook has info for ${total} people </p>` + `<p></p>` + `<p> ${currentDate} </p>`)
+        response.end()
+    }).catch(error => {
+        console.error(error)
+        response.status(500).end()
+    })
 })
 
+// API connected with MongoDB
 app.get('/api/persons', (request, response) => {
+    Person.find({}).then(persons=> {
     response.json(persons)
+  })
 })
 
+// API connected with MongoDB
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
-    console.log(person)
+    Person.findById(request.params.id).then(person => {
     response.json(person)
+    console.log(person)
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -67,32 +80,27 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
+// API connected with MongoDB
 app.post('/api/persons', (request, response) => {
-    const newId = Math.floor((Math.random()*1000)+1)
     const body = request.body
 
-    console.log(newId)
-    console.log(newId)
-
-    if(!body.name || !body.number) {
+    if (!body.name || !body.number) {
         return response.status(400).json({ error: 'content missing' })
-    }  
-
-    const exists = persons.find(p =>  p.name === body.name )
-    if (exists) {
-        return response.status(400).json({error: 'name must be unique '})
     }
 
-    const newPerson = {
-        id: newId,
+    // const exists = persons.find(p =>  p.name === body.name )
+    // if (exists) {
+    //     return response.status(400).json({error: 'name must be unique '})
+    // }
+
+    const newPerson = new Person({
         name: body.name,
         number: body.number,
-    }
+    })
 
-    persons = persons.concat(newPerson)
-    response.json(newPerson)
-
-
+    newPerson.save().then(p => {
+    response.json(p)
+    })
 })
 
 const unknownEndpoint = (request, response) => {
