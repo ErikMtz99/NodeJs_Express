@@ -84,11 +84,6 @@ app.post('/api/persons', (request, response) => {
         return response.status(400).json({ error: 'content missing' })
     }
 
-    // const exists = persons.find(p =>  p.name === body.name )
-    // if (exists) {
-    //     return response.status(400).json({error: 'name must be unique '})
-    // }
-
     const newPerson = new Person({
         name: body.name,
         number: body.number,
@@ -137,7 +132,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  } else if(error.name === 'ValidationError') {
+    return response.status(400).json({error:error.message})
+  }
   next(error)
 }
 
